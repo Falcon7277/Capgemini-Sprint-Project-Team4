@@ -1,5 +1,9 @@
 package com.example.DemoCheck.entity;
 
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -20,6 +24,10 @@ public class ProductLine {
     @Lob
     @Column(name = "image", columnDefinition = "MEDIUMBLOB")
     private byte[] image;
+
+    @OneToMany(mappedBy = "productLine")
+    @JsonIgnore
+    private List<Product> products;
 
     public ProductLine() {
     }
