@@ -1,6 +1,7 @@
 package com.example.DemoCheck.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,7 +18,7 @@ import java.util.List;
 public class Order {
 
     @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)  // THIS IS MISSING
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer orderNumber;
 
     private LocalDate orderDate;
@@ -26,14 +27,13 @@ public class Order {
 
     private String status;
     private String comments;
-
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customerNumber")
-//    @JsonIgnore   // ADD THIS
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Customer customer;
 
     @OneToMany(mappedBy = "order")
-//    @JsonIgnore   // ADD THIS
+    @JsonIgnore   // ADD THIS
     List<OrderDetails> orderDetails;
 }
 

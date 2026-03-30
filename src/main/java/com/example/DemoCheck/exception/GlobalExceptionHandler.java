@@ -97,13 +97,18 @@ public class GlobalExceptionHandler {
 
             if (id != null) {
                 message = "Employee already exists with id: " + id;
-            } else if (ex.getMessage() != null && ex.getMessage().contains("not-null")) {
-                message = "Required fields are missing";
-            } else {
-                message = "Invalid or duplicate data";
             }
-        } finally {
+            else if (ex.getMessage() != null && ex.getMessage().contains("customerNumber")) {
+                message = "Customer is required for Order";
+            }
+            else if (ex.getMessage() != null && ex.getMessage().contains("not-null")) {
+                message = "Required fields are missing";
+            }
+            else {
+                message = ex.getMessage();
+            }
 
+        } finally {
             EmployeeEventHandler.currentEmployeeId.remove();
         }
 
@@ -114,7 +119,6 @@ public class GlobalExceptionHandler {
                 LocalDateTime.now());
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
-
     }
 
     // Generic fallback
