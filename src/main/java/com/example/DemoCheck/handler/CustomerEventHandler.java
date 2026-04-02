@@ -8,6 +8,7 @@ import org.springframework.data.rest.core.annotation.HandleBeforeCreate;
 import org.springframework.data.rest.core.annotation.HandleBeforeSave;
 import org.springframework.data.rest.core.annotation.RepositoryEventHandler;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 
@@ -18,7 +19,7 @@ public class CustomerEventHandler {
     private static final String PHONE_REGEX = "^[0-9]{8,15}$";
     private static final String POSTAL_REGEX = "^[0-9]{6}$";
     private static final int MAX_NAME_LENGTH = 50;
-    private static long lastId = 0;
+    private static volatile long lastId = 0;
 
     @Autowired
     private CustomerRepository customerRepository;
@@ -51,16 +52,41 @@ public class CustomerEventHandler {
         }
     }
 
-    private synchronized Integer generateCustomerId() {
+    @Transactional
+    public Integer generateCustomerId() {
+
+        Integer id;
+        int attempts = 0;
+
+        do {
+            id = generateTimeBasedId();
+            attempts++;
+
+            if (attempts > 5) {
+                throw new RuntimeException("Failed to generate unique customer ID after retries");
+            }
+
+        } while (customerRepository.existsById(id));
+
+        return id;
+    }
+
+    private synchronized Integer generateTimeBasedId() {
+
         long current = System.currentTimeMillis();
 
+        // Ensure monotonic increase
         if (current <= lastId) {
             current = lastId + 1;
         }
 
         lastId = current;
 
-        return (int) (current % Integer.MAX_VALUE);
+        // Mix bits for better distribution
+        long mixed = current ^ (current >>> 16);
+
+        // Ensure positive int
+        return (int) (mixed & 0x7fffffff);
     }
 
     //Main validation entry

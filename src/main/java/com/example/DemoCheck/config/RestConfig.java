@@ -72,7 +72,7 @@ public class RestConfig implements RepositoryRestConfigurer {
         config.getProjectionConfiguration().addProjection(ProductProjection.class);
 
         cors.addMapping("/**")
-               .allowedOrigins("http://localhost:8082")
+               .allowedOrigins("http://172.16.160.136:8082")
                .allowedMethods("GET", "POST", "PATCH", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("*");
     }

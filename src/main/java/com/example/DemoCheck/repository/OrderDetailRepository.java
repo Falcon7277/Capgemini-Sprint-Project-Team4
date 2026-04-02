@@ -18,4 +18,10 @@ import com.example.DemoCheck.entity.OrderDetails;
 public interface OrderDetailRepository extends JpaRepository<OrderDetails, OrderDetailId> {
     // @RestResource(path = "searchByProductCode")
     Page<OrderDetails> findByProduct_ProductCode(@Param("productCode") String productCode, Pageable pageable);
+
+    @RestResource(path = "findByOrder_OrderNumber", rel = "findByOrder_OrderNumber")
+    Page<OrderDetails> findByOrder_OrderNumber(
+            @Param("orderNumber") Integer orderNumber,
+            Pageable pageable
+    );
 }
