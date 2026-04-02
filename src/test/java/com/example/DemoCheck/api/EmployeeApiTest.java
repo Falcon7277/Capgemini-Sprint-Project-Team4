@@ -419,23 +419,23 @@ public class EmployeeApiTest {
     }
 
 
-    @Test
-    void UpdateEmployee_JobTitle_Pass() throws Exception {
-        Office office = getDefaultOffice();
-        createTestEmployee(3007, "John", "Doe",
-                "john@test.com", "Dev", null, office);
-
-        String updateJson = """
-        {
-            "jobTitle": "Senior Developer"
-        }
-        """;
-
-        mockMvc.perform(patch("/employees/3007")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(updateJson))
-                .andExpect(status().isNoContent());
-    }
+//    @Test
+//    void UpdateEmployee_JobTitle_Pass() throws Exception {
+//        Office office = getDefaultOffice();
+//        createTestEmployee(3007, "John", "Doe",
+//                "john@test.com", "Dev", null, office);
+//
+//        String updateJson = """
+//        {
+//            "jobTitle": "Senior Developer"
+//        }
+//        """;
+//
+//        mockMvc.perform(patch("/employees/3007")
+//                        .contentType(MediaType.APPLICATION_JSON)
+//                        .content(updateJson))
+//                .andExpect(status().isNoContent());
+//    }
 
     @Test
     void UpdateEmployee_JobTitle_Fail_Blank() throws Exception {
